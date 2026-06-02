@@ -5,8 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.util.List;
+import java.util.UUID;
 
 @Table(name = "users")
 @Entity(name = "User")
@@ -17,8 +20,10 @@ import java.util.List;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    @UuidGenerator
+    @Column(name = "id", columnDefinition = "BINARY(16)", updatable = false, nullable = false)
+    private UUID id;
 
     @Column(unique = true)
     private String email;
