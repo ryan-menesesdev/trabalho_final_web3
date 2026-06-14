@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validar Código</title>
+</head>
+<body style="font-family: Arial, sans-serif; padding: 2rem;">
+    <h2>Verificar Código</h2>
+    <p>Insira o código de 6 dígitos enviado para o seu e-mail.</p>
+    
+    <form action="/verify-code" method="POST">
+        <input type="hidden" id="email" name="email">
+        
+        <div>
+            <label for="code">Código de Acesso:</label><br>
+            <input type="text" id="code" name="code" required maxlength="6" style="margin-bottom: 10px; width: 150px; padding: 5px;">
+        </div>
+        <button type="submit" style="padding: 5px 15px;">Validar</button>
+    </form>
+
+    <script>
+        // Extrai o parâmetro "email" da Query String da URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const emailParam = urlParams.get('email');
+        
+        // Insere o e-mail no input hidden do formulário
+        if(emailParam) {
+            document.getElementById('email').value = emailParam;
+        } else {
+            console.warn("Nenhum e-mail encontrado na URL.");
+        }
+    </script>
+</body>
+</html>

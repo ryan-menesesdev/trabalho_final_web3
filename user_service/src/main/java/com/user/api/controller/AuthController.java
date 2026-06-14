@@ -2,6 +2,7 @@ package com.user.api.controller;
 
 import com.user.api.dto.EmailDto;
 import com.user.api.dto.EmailRequestDto;
+import com.user.api.dto.RecoveryJwtTokenDto;
 import com.user.api.dto.VerifyCodeRequestDto;
 import com.user.api.entitities.Role;
 import com.user.api.entitities.User;
@@ -9,6 +10,7 @@ import com.user.api.enums.RoleName;
 import com.user.api.rabbitmq.UserProducer;
 import com.user.api.repositories.UserRepository;
 import com.user.api.services.CodigoCacheService;
+import com.user.api.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,15 +28,18 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final CodigoCacheService codigoCacheService;
     private final UserProducer userProducer;
+    private final UserService userService;
 
     public AuthController(UserRepository userRepository,
                           PasswordEncoder passwordEncoder,
                           CodigoCacheService codigoCacheService,
-                          UserProducer userProducer) {
+                          UserProducer userProducer,
+                          UserService userService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.codigoCacheService = codigoCacheService;
         this.userProducer = userProducer;
+        this.userService = userService;
     }
 
     @PostMapping("/request-code")
@@ -102,6 +107,8 @@ public class AuthController {
 
         userProducer.sendEmail(emailDto);
 
-        return ResponseEntity.ok("Código validado com sucesso.");
+        RecoveryJwtTokenDto tokenDto = userService.generateTokenFromEmail(email);
+
+        return ResponseEntity.ok(tokenDto);
     }
 }

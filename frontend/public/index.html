@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitação de Acesso</title>
+</head>
+<body style="font-family: Arial, sans-serif; padding: 2rem;">
+    <h2>Solicitar Código de Acesso</h2>
+    
+    <form action="/send-code" method="POST">
+        <div>
+            <label for="email">Digite seu E-mail:</label><br>
+            <input type="email" id="email" name="email" required style="margin-bottom: 10px; width: 300px; padding: 5px;">
+        </div>
+        <button type="submit" style="padding: 5px 15px;">Enviar Código</button>
+    </form>
+</body>
+</html>

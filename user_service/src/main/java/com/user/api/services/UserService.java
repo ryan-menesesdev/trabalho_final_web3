@@ -57,4 +57,13 @@ public class UserService {
 
         return new UserProfileDto(user.getId(), user.getEmail(), roles);
     }
+
+    public RecoveryJwtTokenDto generateTokenFromEmail(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado: " + email));
+
+        UserDetailsImpl userDetails = new UserDetailsImpl(user);
+
+        return new RecoveryJwtTokenDto(jwtTokenService.generateToken(userDetails));
+    }
 }

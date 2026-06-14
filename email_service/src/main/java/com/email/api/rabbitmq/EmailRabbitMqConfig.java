@@ -1,4 +1,4 @@
-package com.email.api.config;
+package com.email.api.rabbitmq;
 
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.support.converter.JacksonJsonMessageConverter;
@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class RabbitMqConfig {
+public class EmailRabbitMqConfig {
     @Value("${broker.queue.email.name}")
     private String queue;
 

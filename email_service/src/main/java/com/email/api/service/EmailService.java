@@ -1,9 +1,11 @@
 package com.email.api.service;
 
+import com.email.api.dto.EmailDto;
 import com.email.api.enums.StatusEmail;
 import com.email.api.model.Email;
 import com.email.api.repository.EmailRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
@@ -27,7 +29,11 @@ public class EmailService {
     private String emailFrom;
 
     @Transactional
-    public Email sendEmail(Email emailModel) {
+    public Email sendEmail(EmailDto emailRecordDto) {
+        Email emailModel = new Email();
+
+        BeanUtils.copyProperties(emailRecordDto, emailModel);
+
         try {
             emailModel.setSendDateEmail(LocalDateTime.now());
             emailModel.setEmailFrom(emailFrom);
