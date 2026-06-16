@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Completar Cadastro</title>
+</head>
+<body style="font-family: Arial; padding: 2rem;">
+    <h2>Complete seu Perfil</h2>
+    <form id="registerForm">
+        <label>Nome:</label><br>
+        <input type="text" id="name" required style="margin-bottom: 10px;"><br>
+        
+        <label>Cargo:</label><br>
+        <select id="role" required style="margin-bottom: 10px;">
+            <option value="ROLE_CUSTOMER">Cliente</option>
+            <option value="ROLE_ADMINISTRATOR">Administrador</option>
+        </select><br>
+        
+        <button type="submit">Salvar e Entrar</button>
+    </form>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const token = sessionStorage.getItem('token');
+            const name = document.getElementById('name').value;
+            const role = document.getElementById('role').value;
+
+            try {
+                const response = await fetch('http://localhost:8081/users/update-profile', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+
+                    body: JSON.stringify(
+                        { 
+                            name,
+                            role                            
+                        }
+                    )
+                });
+
+                if(response.ok) {
+                    window.location.href = '/dashboard';
+                } else {
+                    alert('Erro ao atualizar perfil.');
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        });
+    </script>
+</body>
+</html>

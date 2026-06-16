@@ -44,7 +44,7 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private String recoveryToken(HttpServletRequest request) {
+    private String  recoveryToken(HttpServletRequest request) {
         String authorizationHeader = request.getHeader("Authorization");
         if (authorizationHeader != null) {
             return authorizationHeader.replace("Bearer ", "");

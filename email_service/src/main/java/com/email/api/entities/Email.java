@@ -1,8 +1,10 @@
-package com.email.api.model;
+package com.email.api.entities;
 
 import com.email.api.enums.StatusEmail;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -15,11 +17,13 @@ import java.util.UUID;
 @Getter
 @Setter
 public class Email {
-    private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @JdbcTypeCode(SqlTypes.BINARY)
+    @Column(name = "id", updatable = false, nullable = false)
     private UUID emailId;
+
     private UUID userId;
     private String emailFrom;
     private String emailTo;

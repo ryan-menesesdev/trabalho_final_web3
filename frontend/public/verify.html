@@ -20,11 +20,9 @@
     </form>
 
     <script>
-        // Extrai o parâmetro "email" da Query String da URL
         const urlParams = new URLSearchParams(window.location.search);
         const emailParam = urlParams.get('email');
         
-        // Insere o e-mail no input hidden do formulário
         if(emailParam) {
             document.getElementById('email').value = emailParam;
         } else {

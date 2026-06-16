@@ -41,7 +41,7 @@ app.post('/verify-code', async (req, res) => {
         res.send(`
             <script>
                 sessionStorage.setItem('token', '${token}');
-                window.location.href = '/dashboard';
+                window.location.href = '/register'; 
             </script>
         `);
     } catch (error) {
@@ -55,8 +55,26 @@ app.post('/verify-code', async (req, res) => {
     }
 });
 
+app.get('/register', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'register.html'));
+});
+
 app.get('/dashboard', (req, res) => {
-    res.send('<h1>Dashboard</h1><p>Bem-vindo! Esta página será construída na etapa 4.</p>');
+    res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+});
+
+app.get('/api/protected', async (req, res) => {
+    try {
+        const authHeader = req.headers['authorization'];
+        
+        const response = await axios.get('http://localhost:8081/users/test/customer', {
+            headers: { 'Authorization': authHeader }
+        });
+        
+        res.send(response.data);
+    } catch (error) {
+        res.status(error.response?.status || 500).send(error.response?.data || "Erro de autorização");
+    }
 });
 
 app.listen(PORT, () => {

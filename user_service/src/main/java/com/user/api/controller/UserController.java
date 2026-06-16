@@ -1,9 +1,6 @@
 package com.user.api.controller;
 
-import com.user.api.dto.CreateUserDto;
-import com.user.api.dto.LoginUserDto;
-import com.user.api.dto.RecoveryJwtTokenDto;
-import com.user.api.dto.UserProfileDto;
+import com.user.api.dto.*;
 import com.user.api.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -51,6 +48,18 @@ public class UserController {
         UserProfileDto userProfile = userService.getCurrentUserProfile(email);
 
         return ResponseEntity.ok(userProfile);
+    }
+
+    @PostMapping("/update-profile")
+    public ResponseEntity<UserProfileDto> updateProfile(
+            Authentication authentication,
+            @RequestBody UpdateProfileDto dto
+    ) {
+
+        String email = authentication.getName();
+        UserProfileDto updated = userService.updateProfile(email, dto);
+
+        return ResponseEntity.ok(updated);
     }
 
 }

@@ -1,11 +1,9 @@
 package com.user.api.services;
 
-import com.user.api.dto.CreateUserDto;
-import com.user.api.dto.LoginUserDto;
-import com.user.api.dto.RecoveryJwtTokenDto;
-import com.user.api.dto.UserProfileDto;
+import com.user.api.dto.*;
 import com.user.api.entitities.Role;
 import com.user.api.entitities.User;
+import com.user.api.enums.RoleName;
 import com.user.api.repositories.UserRepository;
 import com.user.api.security.authentication.JwtTokenService;
 import com.user.api.security.config.SecurityConfiguration;
@@ -16,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -53,7 +52,11 @@ public class UserService {
 
     public UserProfileDto getCurrentUserProfile(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Usuário não encontrado: " + email));
-        List<String> roles = user.getRoles().stream().map(role -> role.getName().name()).toList();
+
+        List<String> roles = user.getRoles().stream()
+                .filter(role -> role != null && role.getName() != null)
+                .map(role -> role.getName().name())
+                .toList();
 
         return new UserProfileDto(user.getId(), user.getEmail(), roles);
     }
@@ -65,5 +68,41 @@ public class UserService {
         UserDetailsImpl userDetails = new UserDetailsImpl(user);
 
         return new RecoveryJwtTokenDto(jwtTokenService.generateToken(userDetails));
+    }
+
+    public UserProfileDto updateProfile(String email, UpdateProfileDto dto) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado: " + email));
+
+        user.setName(dto.name());
+
+        RoleName roleNameDesejada;
+
+        try {
+            roleNameDesejada = RoleName.valueOf(dto.role().toString());
+        } catch (Exception e) {
+            roleNameDesejada = RoleName.valueOf(dto.role().name());
+        }
+
+        RoleName finalRoleNameDesejada = roleNameDesejada;
+        boolean jaPossuiRole = user.getRoles() != null && user.getRoles().stream().anyMatch(r -> r.getName() == finalRoleNameDesejada);
+
+        if (!jaPossuiRole) {
+            Role newRole = Role.builder()
+                    .name(roleNameDesejada)
+                    .build();
+
+            if (user.getRoles() == null) {
+                user.setRoles(new ArrayList<>(List.of(newRole)));
+            } else {
+                user.getRoles().clear();
+                user.getRoles().add(newRole);
+            }
+        }
+
+        userRepository.save(user);
+
+        return new UserProfileDto(user.getId(), user.getEmail(), List.of(roleNameDesejada.name()));
     }
 }

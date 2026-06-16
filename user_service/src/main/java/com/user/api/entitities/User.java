@@ -1,11 +1,10 @@
 package com.user.api.entitities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UuidGenerator;
+import org.hibernate.type.SqlTypes;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,16 +15,19 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @Getter
+@Setter
 public class User {
 
     @Id
-    @GeneratedValue(generator = "UUID")
-    @UuidGenerator
-    @Column(name = "id", columnDefinition = "BINARY(16)", updatable = false, nullable = false)
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @JdbcTypeCode(SqlTypes.BINARY)
+    @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
     @Column(unique = true)
     private String email;
+
+    private String name;
 
     private String password;
 

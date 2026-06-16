@@ -2,7 +2,7 @@ package com.email.api.service;
 
 import com.email.api.dto.EmailDto;
 import com.email.api.enums.StatusEmail;
-import com.email.api.model.Email;
+import com.email.api.entities.Email;
 import com.email.api.repository.EmailRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;

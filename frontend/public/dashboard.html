@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+</head>
+<body style="font-family: Arial; padding: 2rem;">
+    <h2>Dashboard Protegido</h2>
+    
+    <div style="margin-bottom: 20px;">
+        <button id="btnProtected">Testar endpoint protegido</button>
+        <button id="btnProfile">Meu perfil</button>
+        <button id="btnExit">Sair</button>
+    </div>
+
+    <div id="output" style="background: #f4f4f4; padding: 15px; min-height: 100px;">
+        <em>Resultados aparecerão aqui...</em>
+    </div>
+
+    <script>
+        const token = sessionStorage.getItem('token');
+        if(!token) window.location.href = '/';
+
+        const output = document.getElementById('output');
+
+        document.getElementById('btnProtected').addEventListener('click', async () => {
+            try {
+                const res = await fetch('/api/protected', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const text = await res.text();
+                output.innerHTML = `<strong>Resposta:</strong> ${text}`;
+            } catch (err) {
+                output.innerHTML = `<strong>Erro:</strong> ${err.message}`;
+            }
+        });
+
+        document.getElementById('btnProfile').addEventListener('click', async () => {
+            try {
+                const res = await fetch('http://localhost:8081/users/me', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+
+                const data = await res.json();
+                
+                output.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (err) {
+                output.innerHTML = `<strong>Erro:</strong> ${err.message}`;
+            }
+        });
+
+        document.getElementById('btnExit').addEventListener('click', () => {
+            sessionStorage.removeItem('token');
+            window.location.href = '/';
+        });
+    </script>
+</body>
+</html>
