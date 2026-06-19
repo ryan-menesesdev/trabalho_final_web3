@@ -58,7 +58,7 @@ public class UserService {
                 .map(role -> role.getName().name())
                 .toList();
 
-        return new UserProfileDto(user.getId(), user.getEmail(), roles);
+        return new UserProfileDto(user.getId(), user.getName(), user.getEmail(), roles);
     }
 
     public RecoveryJwtTokenDto generateTokenFromEmail(String email) {
@@ -89,20 +89,15 @@ public class UserService {
         boolean jaPossuiRole = user.getRoles() != null && user.getRoles().stream().anyMatch(r -> r.getName() == finalRoleNameDesejada);
 
         if (!jaPossuiRole) {
-            Role newRole = Role.builder()
-                    .name(roleNameDesejada)
-                    .build();
-
-            if (user.getRoles() == null) {
-                user.setRoles(new ArrayList<>(List.of(newRole)));
+            if (user.getRoles() == null || user.getRoles().isEmpty()) {
+                user.setRoles(new ArrayList<>(List.of(Role.builder().name(roleNameDesejada).build())));
             } else {
-                user.getRoles().clear();
-                user.getRoles().add(newRole);
+                user.getRoles().get(0).setName(roleNameDesejada);
             }
         }
 
         userRepository.save(user);
 
-        return new UserProfileDto(user.getId(), user.getEmail(), List.of(roleNameDesejada.name()));
+        return new UserProfileDto(user.getId(), user.getName(), user.getEmail(), List.of(roleNameDesejada.name()));
     }
 }
