@@ -57,7 +57,7 @@ public class SecurityConfiguration {
                         .requestMatchers(ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED).permitAll()
                         .requestMatchers(ENDPOINTS_WITH_AUTHENTICATION_REQUIRED).authenticated()
                         .requestMatchers(ENDPOINTS_ADMIN).hasRole("ADMINISTRATOR")
-                        .requestMatchers(ENDPOINTS_CUSTOMER).hasAnyRole("CUSTOMER", "ADMINISTRATOR")
+                        .requestMatchers(ENDPOINTS_CUSTOMER).hasAnyRole("CUSTOMER")
                         .requestMatchers("/users/me").authenticated()
                         .anyRequest().denyAll()
                 )

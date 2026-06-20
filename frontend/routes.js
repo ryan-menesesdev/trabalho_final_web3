@@ -66,7 +66,15 @@ router.get('/api/protected', async (req, res) => {
         
         res.send(response.data);
     } catch (error) {
-        res.status(error.response?.status || 500).send(error.response?.data || "Erro de autorização");
+        const status = error.response?.status || 500;
+
+        if (status === 403) {
+            res.status(403).send("Apenas clientes podem acessar!");
+        } else if (status === 401) {
+            res.status(401).send("Token inválido ou expirado. Faça login novamente.");
+        } else {
+            res.status(status).send(error.response?.data || "Erro de autorização");
+        }
     }
 });
 

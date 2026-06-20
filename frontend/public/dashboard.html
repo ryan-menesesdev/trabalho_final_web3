@@ -43,7 +43,13 @@
 
                 const data = await res.json();
                 
-                output.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                output.innerHTML = `
+                    <h3>Perfil</h3>
+                    <p><strong>ID:</strong> ${data.id}</p>
+                    <p><strong>Nome:</strong> ${data.name}</p>
+                    <p><strong>Email:</strong> ${data.email}</p>
+                    <p><strong>Funções:</strong> ${data.roles.join(', ')}</p>
+                `;
             } catch (err) {
                 output.innerHTML = `<strong>Erro:</strong> ${err.message}`;
             }
